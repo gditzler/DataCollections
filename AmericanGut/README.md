@@ -42,7 +42,9 @@ cd ..
 ```
 
 We converted the `DIET_TYPE` map file to a second mapping file that reduces the data only two classes: (a) all omnivores, and (b) all styles of vegetarian (including vegans).
-
+```bash
+cat AmericanGut-Gut-Diet.txt | sed -e "s/Omnivore.*/Omnivore/g" -e "s/Veg.*/Veggie/g" > AmericanGut-Gut-Diet-OV.txt
+```
 
 # Citing the data 
 
