@@ -2,5 +2,6 @@
 *.swp
 
 # directories 
-AmericanGut/AmericanGut-DietType/
+AmericanGut/AmericanGut-Diet/
 AmericanGut/AmericanGut-Sex/
+AmericanGut/AmericanGut-Site/
