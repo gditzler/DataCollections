@@ -28,4 +28,10 @@ head -1 tmp_map.txt |tr '\t' '\n' | awk '{n=n+1;print n,$1}' | grep DIET\_TYPE  
 cat tmp_map.txt | awk -F $'\t' '{print $1,"\t",$163}' > ../AmericanGut-DietType.txt
 ```
 
+# Citing the data 
+
+Refer to the following links and within
+
+* [American Gut on GitHub - biocore](https://github.com/biocore/American-Gut)
+* [The American Gut Project](http://microbio.me/americangut/FAQ.psp)
  
