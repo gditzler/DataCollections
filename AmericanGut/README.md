@@ -28,6 +28,9 @@ head -1 tmp_map.txt |tr '\t' '\n' | awk '{n=n+1;print n,$1}' | grep DIET\_TYPE  
 cat tmp_map.txt | awk -F $'\t' '{print $1,"\t",$163}' > ../AmericanGut-DietType.txt
 ```
 
+We converted the `DIET_TYPE` map file to a second mapping file that reduces the data only two classes: (a) all omnivores, and (b) all styles of vegetarian (including vegans).
+
+
 # Citing the data 
 
 Refer to the following links and within
