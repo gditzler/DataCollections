@@ -4,6 +4,12 @@ import argparse
 import pandas as pd
 import numpy as np
 
+__authors__ = "Gregory Ditzler"
+__copyright__ = "Copyright 2014, Gregory Ditzler"
+__license__ = "GPL"
+__maintainer__ = "Gregory Ditzler"
+__email__ = "gregory.ditzler@gmail.com"
+
 def load_biom(biom_fp):
   """
   Load a biom file and return the data matrix, sampled IDs, OTU names, and 
@@ -74,6 +80,7 @@ def build_opt_parse():
 
 def main():
   """
+  do everything here 
   """
   parser = build_opt_parse()
   args = parser.parse_args()
