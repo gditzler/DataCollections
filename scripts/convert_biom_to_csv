@@ -1,0 +1,102 @@
+#!/usr/bin/env python 
+import json 
+import argparse 
+import pandas as pd
+import numpy as np
+
+def load_biom(biom_fp):
+  """
+  Load a biom file and return the data matrix, sampled IDs, OTU names, and 
+  the OTU ID. 
+  .biom_fp 
+  .data
+  .sample_ids
+  .otu_names
+  .otu_ids
+  """
+  biom_dat = json.loads(open(biom_fp, "rb").read())
+  otu_names = [json.dumps(df["metadata"]["taxonomy"]) for df in biom_dat["rows"]]
+  otu_ids = [df["id"] for df in biom_dat["rows"]]
+  sample_ids = [df["id"] for df in biom_dat["columns"]]
+  matrix = np.zeros(biom_dat["shape"])
+  for i, j, val in biom_dat["data"]:
+    matrix[i, j] = val
+  return matrix, sample_ids, otu_names, otu_ids
+
+def load_map(map_fp):
+  """
+  Read in the tab-delimited map file using a pandas one-liner.
+  """
+  return pd.read_csv(map_fp, sep="\t")
+
+def build_opt_parse():
+  """
+  Build the option parser
+  .parser
+  """
+  parser = argparse.ArgumentParser(
+      description = ("Convert a Biom and mao file pair to a set of CSV files "
+        "containing the dense OTU table with a corresponding label file. The "
+        "rows are ordered to keep the new data and label file in check with "
+        "each other.\n")
+      )
+  parser.add_argument(
+      "-i",
+      "--input",
+      help="Path to the Biom file."
+      )
+  parser.add_argument(
+      "-m",
+      "--map",
+      help="Path to the map file."
+      )
+  parser.add_argument(
+      "-c",
+      "--col",
+      help="Column of the map file that contains the labels."
+      )
+  parser.add_argument(
+      "-d",
+      "--matrix",
+      help="Path to the output data matrix."
+      )
+  parser.add_argument(
+      "-l",
+      "--label",
+      help="Path to the class label file."
+      )
+  parser.add_argument(
+      "-f",
+      "--features",
+      help="Path to the class label file."
+      )
+  return parser
+
+def main():
+  """
+  """
+  parser = build_opt_parse()
+  args = parser.parse_args()
+  data, sample_ids, otu_names, otu_ids = load_biom(args.input)
+  metadata = { x[1]:x[2] for x in load_map(args.map)[["#SampleID",args.col]].itertuples()}
+  labels = [metadata[key] for key in sample_ids]
+  
+  f = open(args.label, "w")
+  for l in labels[:-1]:
+    f.write(l+"\n")
+  f.write(labels[-1])  # avoid the extra return char
+  f.close()
+
+  f = open(args.features, "w")
+  for name, ids in map(None, otu_names[:-1], otu_ids[:-1]):
+    f.write(name+" ("+str(ids)+")\n")
+  f.write(otu_names[-1]+"("+str(ids)+")")  # avoid the extra return char
+  f.close()
+
+  np.savetxt(args.matrix, data.transpose(), delimiter=",", fmt="%s")
+  
+  return None 
+
+if __name__ == "__main__":
+  main()
+
