@@ -86,8 +86,19 @@ def main():
   args = parser.parse_args()
   data, sample_ids, otu_names, otu_ids = load_biom(args.input)
   metadata = { x[1]:x[2] for x in load_map(args.map)[["#SampleID",args.col]].itertuples()}
-  labels = [metadata[key] for key in sample_ids]
   
+  #labels = []
+  #dels = []
+  #for n,sid in enumerate(sample_ids):
+  #  print n, sid, metadata.has_key(float(sid))
+  #  if metadata.has_key(float(sid)):
+  #    labels.append(metadata[float(sid)])
+  #  else:
+  #    dels.append(n)
+  #print dels
+  #data = np.delete(data, dels, 0)
+  labels = [metadata[key] for key in sample_ids]
+
   f = open(args.label, "w")
   for l in labels[:-1]:
     f.write(l+"\n")
