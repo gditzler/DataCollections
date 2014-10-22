@@ -1,7 +1,6 @@
 #!/usr/bin/env python 
 import json 
 import argparse 
-import pandas as pd
 import numpy as np
 import csv 
 import itertools 
@@ -16,11 +15,13 @@ def load_biom(biom_fp):
   """
   Load a biom file and return the data matrix, sampled IDs, OTU names, and 
   the OTU ID. 
-  .biom_fp 
-  .data
-  .sample_ids
-  .otu_names
-  .otu_ids
+   @biom_fp 
+   @data
+   @sample_ids
+   @otu_names
+   @otu_ids
+
+   >>> matrix, sample_ids, otu_names, otu_ids = load_biom("mydata.biom")
   """
   biom_dat = json.loads(open(biom_fp, "rb").read())
   otu_names = [json.dumps(df["metadata"]["taxonomy"]) for df in biom_dat["rows"]]
@@ -33,7 +34,10 @@ def load_biom(biom_fp):
 
 def load_map(map_fp):
   """
-  Read in the tab-delimited map file
+  Read in the tab-delimited map file.
+   @map_fp
+
+   >>> meta_data = load_map("map.txt")
   """
   meta_data = {}
   with open(map_fp, "rb") as fh:
@@ -61,12 +65,11 @@ def load_map(map_fp):
         meta_data[row["SampleID"]][label] = row[label]
 
     return meta_data
-  #return pd.read_csv(map_fp, sep="\t")
 
 def build_opt_parse():
   """
   Build the option parser
-  .parser
+    @parser
   """
   parser = argparse.ArgumentParser(
       description = ("Convert a Biom and mao file pair to a set of CSV files "
@@ -113,7 +116,6 @@ def main():
   parser = build_opt_parse()
   args = parser.parse_args()
   data, sample_ids, otu_names, otu_ids = load_biom(args.input)
-  #metadata = { x[1]:x[2] for x in load_map(args.map)[["#SampleID",args.col]].itertuples()}
   metadata = load_map(args.map)
   labels = [metadata[key][args.col] for key in sample_ids]
 
