@@ -3,6 +3,8 @@ import json
 import argparse 
 import pandas as pd
 import numpy as np
+import csv 
+import itertools 
 
 __authors__ = "Gregory Ditzler"
 __copyright__ = "Copyright 2014, Gregory Ditzler"
@@ -31,9 +33,35 @@ def load_biom(biom_fp):
 
 def load_map(map_fp):
   """
-  Read in the tab-delimited map file using a pandas one-liner.
+  Read in the tab-delimited map file
   """
-  return pd.read_csv(map_fp, sep="\t")
+  meta_data = {}
+  with open(map_fp, "rb") as fh:
+    first = fh.readline()
+    if first[0] != "#":
+      exit('Error: expected tab delimted field labels starting with # in map file on line 1')
+
+    first = first.strip('#')
+    reader = csv.DictReader(itertools.chain([first], fh), delimiter="\t")
+
+    try:
+      reader_arr = [row for row in reader]
+      headers = reader.fieldnames
+    except csv.Error as e:
+      exit("Error: map file contains error at line %d: %s" % (reader.line_num, e))
+
+    if "SampleID" not in headers:
+      exit("Error: no SampleID column in map file")
+
+    labels = filter(lambda label: label != "SampleID", headers)
+
+    for row in reader_arr:
+      meta_data[row["SampleID"]] = {}
+      for label in labels:
+        meta_data[row["SampleID"]][label] = row[label]
+
+    return meta_data
+  #return pd.read_csv(map_fp, sep="\t")
 
 def build_opt_parse():
   """
@@ -85,19 +113,9 @@ def main():
   parser = build_opt_parse()
   args = parser.parse_args()
   data, sample_ids, otu_names, otu_ids = load_biom(args.input)
-  metadata = { x[1]:x[2] for x in load_map(args.map)[["#SampleID",args.col]].itertuples()}
-  
-  #labels = []
-  #dels = []
-  #for n,sid in enumerate(sample_ids):
-  #  print n, sid, metadata.has_key(float(sid))
-  #  if metadata.has_key(float(sid)):
-  #    labels.append(metadata[float(sid)])
-  #  else:
-  #    dels.append(n)
-  #print dels
-  #data = np.delete(data, dels, 0)
-  labels = [metadata[key] for key in sample_ids]
+  #metadata = { x[1]:x[2] for x in load_map(args.map)[["#SampleID",args.col]].itertuples()}
+  metadata = load_map(args.map)
+  labels = [metadata[key][args.col] for key in sample_ids]
 
   f = open(args.label, "w")
   for l in labels[:-1]:
