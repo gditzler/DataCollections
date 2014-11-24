@@ -1,0 +1,8 @@
+#!/usr/bin/env bash 
+
+
+echo "@RELATION AmericanGut_Gut_Diet_OV" > example.arff
+cat AmericanGut-Gut-Diet-OV-features.txt | sed -e "s/\[//g" -e "s/\]//g" -e "s/\"//g" -e "s/(\([0-9]*\))/\1/g" -e "s/, //g" -e "s/\_\_//g" -e "s/ //g" -e "s/^/\@ATTRIBUTE /g" -e "s/$/ NUMERIC/g" | tr ' ' '\t' >> example.arff
+echo "@ATTRIBUTE class {Omnivore,Veggie}" | tr ' ' '\t' >> example.arff 
+echo "@DATA" >> example.arff
+paste AmericanGut-Gut-Diet-OV-data.txt AmericanGut-Gut-Diet-OV-labels.txt | tr '\t' ',' >> example.arff
