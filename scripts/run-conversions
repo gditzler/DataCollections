@@ -1,0 +1,31 @@
+#!/usr/bin/env bash 
+
+./convert_biom_to_csv -i ../AmericanGut/AmericanGut-Gut-Diet.biom \
+                      -m ../AmericanGut/AmericanGut-Gut-Diet-OV.txt \
+                      -c DIET_TYPE \
+                      -d ../csv/AmericanGut-Gut-Diet-OV-data.txt \
+                      -l ../csv/AmericanGut-Gut-Diet-OV-labels.txt \
+                      -f ../csv/AmericanGut-Gut-Diet-OV-features.txt
+
+./convert_biom_to_csv -i ../AmericanGut/AmericanGut-Gut-Diet-OmniVegan.biom \
+                      -m ../AmericanGut/AmericanGut-Gut-Diet-OmniVegan.txt \
+                      -c DIET_TYPE \
+                      -d ../csv/AmericanGut-Gut-Diet-OmniVegan-data.txt \
+                      -l ../csv/AmericanGut-Gut-Diet-OmniVegan-labels.txt \
+                      -f ../csv/AmericanGut-Gut-Diet-OmniVegan-features.txt
+
+./convert_biom_to_csv -i ../AmericanGut/AmericanGut-Gut-Sex.biom \
+                      -m ../AmericanGut/AmericanGut-Gut-Sex.txt \
+                      -c SEX \
+                      -d ../csv/AmericanGut-Gut-Sex-data.txt \
+                      -l ../csv/AmericanGut-Gut-Sex-labels.txt \
+                      -f ../csv/AmericanGut-Gut-Sex-features.txt
+
+./convert_biom_to_csv -i ../Caporaso/caporaso-gut.biom \
+                      -m ../Caporaso/caporaso-gut.txt \
+                      -c SEX \
+                      -d ../csv/Caporaso-Gut-data.txt \
+                      -l ../csv/Caporaso-Gut-labels.txt \
+                      -f ../csv/Caporaso-Gut-features.txt
+
+
